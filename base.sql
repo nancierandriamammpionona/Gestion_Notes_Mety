@@ -19,21 +19,18 @@ CREATE TABLE Matiere (
     id SERIAL PRIMARY KEY,
     matiere VARCHAR(255) NOT NULL
 );
-par exemple: mathematique,physique,..
 
 -- Table Resolution
 CREATE TABLE Resolution (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(255) NOT NULL
 );
-par exemple: plus petit, plus grand
 
 -- Table Operateur
 CREATE TABLE Operateur (
     id SERIAL PRIMARY KEY,
     symbole CHAR(1) NOT NULL CHECK (symbole IN ('<', '>'))
 );
-par exemple: id: 1 symbole: >
 
 -- Table Parametre
 CREATE TABLE Parametre (
@@ -43,7 +40,6 @@ CREATE TABLE Parametre (
     id_operateur INT NOT NULL REFERENCES Operateur(id),
     id_resolution INT NOT NULL REFERENCES Resolution(id)
 );
-par exemple: 1  1  2  1  1
 
 -- Table Note
 CREATE TABLE Note (
@@ -52,7 +48,6 @@ CREATE TABLE Note (
     id_matiere INT NOT NULL REFERENCES Matiere(id),
     note NUMERIC(5,2) NOT NULL
 );
-par exemple: 1 1 1 13
 
 INSERT INTO Correcteur (nom) VALUES
 ('Rakoto'),
@@ -97,7 +92,8 @@ INSERT INTO Operateur (symbole) VALUES
 -- Exemple: id=1, id_matiere=1 (Mathematique), diff=2, id_operateur=1 (>), id_resolution=1 (plus petit)
 INSERT INTO Parametre (id_matiere, diff, id_operateur, id_resolution) VALUES
 (1, 2, 1, 1),
-(2, 3, 2, 2);
+(1, 8, 2, 1),
+(1, 3, 2, 2);
 
 
 
@@ -106,9 +102,9 @@ INSERT INTO Parametre (id_matiere, diff, id_operateur, id_resolution) VALUES
 INSERT INTO Note (id_candidat, id_matiere, note) VALUES
 (1, 1, 15.00),
 (1, 1, 14.50),
+(1, 1, 14.00),
+(1, 1, 12.50),
 (1, 1, 14.00);
-(3, 1, 12.50),
-(4, 2, 14.00);
 
 ALTER TABLE note ADD COLUMN id_correcteur INT REFERENCES correcteur(id);
 
@@ -154,3 +150,15 @@ INSERT INTO Note (id_candidat, id_matiere, note) VALUES
 (2, 2, 15.00),
 (2, 2, 14.00),
 (2, 2, 16.00);
+
+INSERT INTO operateur (symbole) VALUES ('>=');
+INSERT INTO operateur (symbole) VALUES ('<=');
+
+INSERT INTO Parametre (id_matiere, diff, id_operateur, id_resolution)
+VALUES 
+(1, 2, 3, 1);  -- opérateur >=, résolution plus petit
+
+-- Pour Physique
+INSERT INTO Parametre (id_matiere, diff, id_operateur, id_resolution)
+VALUES
+(2, 1, 4, 2);  -- opérateur <=, résolution plus grand

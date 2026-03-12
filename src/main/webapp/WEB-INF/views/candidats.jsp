@@ -3,32 +3,37 @@
 <html>
 <head>
     <title>Liste des candidats</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-
-<h2>Liste des candidats</h2>
- <a href="/candidat/add">Ajouter un nouveau candidat</a>
-<table border="1">
-<tr>
-    <th>ID</th>
-    <th>Nom</th>
-    <th>Prenom</th>
-    <th>Action</th>
-</tr>
-
-<c:forEach var="c" items="${candidats}">
-<tr>
-    <td>${c.id}</td>
-    <td>${c.nom}</td>
-    <td>${c.prenom}</td>
-    <td>
-        <a href="/candidat/edit/${c.id}">Modifier</a>
-        <a href="/candidat/delete/${c.id}">Supprimer</a>
-    </td>
-</tr>
-</c:forEach>
-
-</table>
-<a href="/">← Retour à l’accueil</a>
+    <div class="app-layout">
+        <jsp:include page="menu.jsp" />
+        <main class="main-content">
+            <div class="container">
+                <h2>Liste des candidats</h2>
+                <a href="${pageContext.request.contextPath}/candidat/add" class="button">Ajouter un nouveau candidat</a>
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Action</th>
+                    </tr>
+                    <c:forEach var="c" items="${candidats}">
+                        <tr>
+                            <td>${c.id}</td>
+                            <td>${c.nom}</td>
+                            <td>${c.prenom}</td>
+                            <td>
+                                <a href="${pageContext.request.contextPath}/candidat/edit/${c.id}">Modifier</a>
+                                <a href="${pageContext.request.contextPath}/candidat/delete/${c.id}" onclick="return confirm('Confirmer ?')">Supprimer</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </div>
+        </main>
+    </div>
 </body>
 </html>

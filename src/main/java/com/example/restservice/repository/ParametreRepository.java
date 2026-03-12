@@ -1,10 +1,13 @@
 package com.example.restservice.repository;
 
-import com.example.restservice.entity.Parametre; // <-- ici entity au lieu de model
+import com.example.restservice.entity.Parametre;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ParametreRepository extends JpaRepository<Parametre, Integer> {
-    Parametre findByIdMatiere(int idMatiere);
+    // Renvoie tous les paramètres pour une matière
+    List<Parametre> findByIdMatiere(int idMatiere);
 }

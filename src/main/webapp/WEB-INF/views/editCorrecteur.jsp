@@ -4,26 +4,27 @@
 <html>
 <head>
     <title>Modifier Correcteur</title>
-   
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-
-<h2>Modifier Correcteur</h2>
-
-<form action="/correcteur/update" method="post">
-
-    <input type="hidden" name="id" value="${correcteur.id}"/>
-
-    <label>Nom :</label>
-    <input type="text" name="nom" value="${correcteur.nom}" required/>
-
-    <div class="buttons">
-        <button type="submit">Modifier</button>
-        <a href="/correcteurs">Retour à la liste des Correcteurs</a>
-        <a href="/">Accueil</a>
+    <div class="app-layout">
+        <jsp:include page="menu.jsp" />
+        <main class="main-content">
+            <div class="container">
+                <h2>Modifier Correcteur</h2>
+                <form action="${pageContext.request.contextPath}/correcteur/update" method="post">
+                    <input type="hidden" name="id" value="${correcteur.id}"/>
+                    <div class="form-group">
+                        <label>Nom :</label>
+                        <input type="text" name="nom" value="${correcteur.nom}" required/>
+                    </div>
+                    <div class="buttons">
+                        <button type="submit">Modifier</button>
+                    </div>
+                </form>
+            </div>
+        </main>
     </div>
-
-</form>
-
 </body>
 </html>
