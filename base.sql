@@ -63,58 +63,16 @@ INSERT INTO Candidat (nom) VALUES
 ('Eliote'),
 ('Violette');
 
-ALTER TABLE candidat
-ADD COLUMN prenom VARCHAR(255);
-
-UPDATE candidat SET prenom = 'Marie-Claire' WHERE id = 1;
-UPDATE candidat SET prenom = 'Lucas' WHERE id = 2;
-UPDATE candidat SET prenom = 'Marck-Antony' WHERE id = 3;
-UPDATE candidat SET prenom = 'Eliot' WHERE id = 4;
-UPDATE candidat SET prenom = 'Violette-Lou' WHERE id = 5;
-
--- Table Matiere
-INSERT INTO Matiere (matiere) VALUES
-('Mathematique'),
-('Physique'),
-('Chimie');
-
--- Table Resolution
-INSERT INTO Resolution (nom) VALUES
-('plus petit'),
-('plus grand');
-
--- Table Operateur
-INSERT INTO Operateur (symbole) VALUES
-('>'),
-('<');
-
--- Table Parametre
--- Exemple: id=1, id_matiere=1 (Mathematique), diff=2, id_operateur=1 (>), id_resolution=1 (plus petit)
-INSERT INTO Parametre (id_matiere, diff, id_operateur, id_resolution) VALUES
-(1, 2, 1, 1),
-(1, 8, 2, 1),
-(1, 3, 2, 2);
-
-
-
--- Table Note
--- Exemple: id=1, id_candidat=1 (Marie), id_matiere=1 (Mathematique), note=13
-INSERT INTO Note (id_candidat, id_matiere, note) VALUES
-(1, 1, 15.00),
-(1, 1, 14.50),
-(1, 1, 14.00),
-(1, 1, 12.50),
-(1, 1, 14.00);
-
+ALTER TABLE candidat ADD COLUMN prenom VARCHAR(255);
 ALTER TABLE note ADD COLUMN id_correcteur INT REFERENCES correcteur(id);
 
 SELECT * FROM correcteur;
 SELECT * FROM candidat;
 SELECT * FROM matiere;
-SELECT * FROM note;
 SELECT * FROM operateur;
-SELECT * FROM parametre;
 SELECT * FROM resolution;
+SELECT * FROM parametre;
+SELECT * FROM note;
 
 TRUNCATE TABLE note RESTART IDENTITY CASCADE;
 TRUNCATE TABLE parametre RESTART IDENTITY CASCADE;
@@ -140,25 +98,3 @@ MAX(note) AS plus_grand
 FROM note
 WHERE id_matiere = 1;
 
-UPDATE note SET id_correcteur = 8 WHERE id = 15;
-UPDATE note SET id_correcteur = 9 WHERE id = 16;
-UPDATE note SET id_correcteur = 10 WHERE id = 17;
-
-
--- test de donnee
-INSERT INTO Note (id_candidat, id_matiere, note) VALUES
-(2, 2, 15.00),
-(2, 2, 14.00),
-(2, 2, 16.00);
-
-INSERT INTO operateur (symbole) VALUES ('>=');
-INSERT INTO operateur (symbole) VALUES ('<=');
-
-INSERT INTO Parametre (id_matiere, diff, id_operateur, id_resolution)
-VALUES 
-(1, 2, 3, 1);  -- opérateur >=, résolution plus petit
-
--- Pour Physique
-INSERT INTO Parametre (id_matiere, diff, id_operateur, id_resolution)
-VALUES
-(2, 1, 4, 2);  -- opérateur <=, résolution plus grand

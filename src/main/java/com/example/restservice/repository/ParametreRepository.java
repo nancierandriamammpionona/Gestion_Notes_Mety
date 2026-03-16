@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ParametreRepository extends JpaRepository<Parametre, Integer> {
-    // Renvoie tous les paramètres pour une matière
     List<Parametre> findByIdMatiere(int idMatiere);
 }

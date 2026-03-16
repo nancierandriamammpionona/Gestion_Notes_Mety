@@ -10,8 +10,7 @@ public class Matiere {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String matiere; // correspond à la colonne "matiere" dans la base
-
+    private String matiere;
     public Matiere() {}
 
     public Integer getId() { 
@@ -19,7 +18,7 @@ public class Matiere {
     }
 
     public String getMatiere() { 
-        return matiere; // <-- correction ici
+        return matiere;
     }
 
     public void setMatiere(String matiere) { 

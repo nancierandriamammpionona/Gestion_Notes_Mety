@@ -12,7 +12,6 @@
         <main class="main-content">
             <div class="container">
                 <h1>Bienvenue dans le projet de gestion</h1>
-                <!-- Vous pouvez ajouter ici du contenu spécifique à l'accueil -->
             </div>
         </main>
     </div>

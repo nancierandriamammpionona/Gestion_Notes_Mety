@@ -43,7 +43,7 @@ public class NoteController {
 
                 Map<String, Object> r = new HashMap<>();
                 r.put("nomCandidat", c.getNom() );
-                r.put("nomMatiere", m.getMatiere()); // <-- ici, on utilise getMatiere()
+                r.put("nomMatiere", m.getMatiere()); 
                 r.put("noteFinale", noteFinale);
 
                 resultats.add(r);
@@ -52,14 +52,14 @@ public class NoteController {
 
         model.addAttribute("resultats", resultats);
 
-        return "resultats"; // JSP
+        return "resultats"; 
     }
 
     @GetMapping("/calculNoteFinale")
     public String afficherFormulaire(Model model) {
         model.addAttribute("matieres", matiereRepository.findAll());
         model.addAttribute("candidats", candidatRepository.findAll());
-        return "noteFinaleParMatiere"; // JSP
+        return "noteFinaleParMatiere"; 
     }
 
     @PostMapping("/calculNoteFinale")

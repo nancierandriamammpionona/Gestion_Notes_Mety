@@ -22,18 +22,15 @@ public class NoteService {
 
     public Double calculNoteFinale(int idCandidat, int idMatiere) {
 
-        // 1️⃣ récupérer les notes
+        //  recuperer les notes
         List<Note> notesEntity = noteRepository.findByIdCandidatAndIdMatiere(idCandidat, idMatiere);
-
-        if (notesEntity.isEmpty()) {
-            return 0.0;
-        }
+        if (notesEntity.isEmpty()) return 0.0;
 
         List<Double> notes = notesEntity.stream()
                 .map(n -> n.getNote().doubleValue())
                 .toList();
 
-        // 2️⃣ calcul somme des différences
+        //  calcul somme des differences
         double sommeDifferences = 0;
         for (int i = 0; i < notes.size(); i++) {
             for (int j = i + 1; j < notes.size(); j++) {
@@ -41,42 +38,75 @@ public class NoteService {
             }
         }
 
-        // 3️⃣ récupérer les paramètres
+        //  recuperer les parametres
         List<Parametre> params = parametreRepository.findByIdMatiere(idMatiere);
-        if (params.isEmpty()) {
-            throw new RuntimeException("Paramètre non défini pour la matière id=" + idMatiere);
-        }
+        if (params.isEmpty())
+            throw new RuntimeException("Parametre non defini pour la matiere id=" + idMatiere);
 
-        Double noteFinale = null;
+        Parametre paramChoisi = null;
 
-        // 4️⃣ tester chaque paramètre
-        for (Parametre param : params) {
-
-            boolean condition = switch (param.getOperateur().getSymbole()) {
-                case ">" -> sommeDifferences > param.getDiff();
-                case "<" -> sommeDifferences < param.getDiff();
-                case ">=" -> sommeDifferences >= param.getDiff();
-                case "<=" -> sommeDifferences <= param.getDiff();
-                default -> throw new RuntimeException("Opérateur inconnu : " + param.getOperateur().getSymbole());
+        //  Condition 1 : correspondance exacte avec operateur
+        for (Parametre p : params) {
+            boolean condition = switch (p.getOperateur().getSymbole()) {
+                case ">" -> sommeDifferences > p.getDiff();
+                case ">=" -> sommeDifferences >= p.getDiff();
+                case "<" -> sommeDifferences < p.getDiff();
+                case "<=" -> sommeDifferences <= p.getDiff();
+                default -> false;
             };
-
             if (condition) {
-                noteFinale = switch (param.getResolution().getNom().toLowerCase()) {
-                    case "plus petit", "petit" -> notes.stream().min(Double::compare).orElse(0.0);
-                    case "plus grand", "grand" -> notes.stream().max(Double::compare).orElse(0.0);
-                    case "moyenne" -> notes.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-                    default -> throw new RuntimeException("Résolution inconnue : " + param.getResolution().getNom());
-                };
-                break; // ⚡ dès qu’un paramètre correspond, on sort
+                paramChoisi = p;
+                break;
             }
         }
 
-        // 5️⃣ si aucun paramètre ne correspond → moyenne
-        if (noteFinale == null) {
-            noteFinale = notes.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+        // si la 1er condition est fausse on continue 
+        if (paramChoisi == null) {
+            if (sommeDifferences % 1 == 0) {
+                // Condition 2 : somme diff : prendre diff le plus proche
+                double minDistance = Double.MAX_VALUE;
+                for (Parametre p : params) {
+                    double distance = Math.abs(sommeDifferences - p.getDiff());
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        paramChoisi = p;
+                    }
+                }
+            } else {
+                // Condition 3 : somme diff : prendre diff inferieur 
+                double diffMax = -1;
+                for (Parametre p : params) {
+                    if (p.getDiff() <= sommeDifferences && p.getDiff() > diffMax) {
+                        diffMax = p.getDiff();
+                        paramChoisi = p;
+                    }
+                }
+                // rehefa tsisy izy de tode ze min no raisina
+                if (paramChoisi == null) {
+                    paramChoisi = params.stream()
+                            .min((a, b) -> Double.compare(a.getDiff(), b.getDiff()))
+                            .orElse(null);
+                }
+            }
         }
 
-        // 6️⃣ arrondi à 2 décimales
+        Double noteFinale;
+        switch (paramChoisi.getResolution().getNom().toLowerCase()) {
+            case "plus petit":
+            case "petit":
+                noteFinale = notes.stream().min(Double::compare).orElse(0.0);
+                break;
+            case "plus grand":
+            case "grand":
+                noteFinale = notes.stream().max(Double::compare).orElse(0.0);
+                break;
+            case "moyenne":
+                noteFinale = notes.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+                break;
+            default:
+                throw new RuntimeException("Resolution inconnue : " + paramChoisi.getResolution().getNom());
+        }
+
         BigDecimal bd = new BigDecimal(noteFinale);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
