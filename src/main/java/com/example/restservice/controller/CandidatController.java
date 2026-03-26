@@ -43,7 +43,7 @@ public class CandidatController {
     public String updateCandidat(@ModelAttribute Candidat candidat){
 
         candidatService.saveCandidat(candidat);
-
+     
         return "redirect:/candidats";
     }
 

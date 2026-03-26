@@ -15,18 +15,21 @@ public class Demande {
     @Column(name = "date")
     private LocalDate date;
 
-    @ManyToOne
-    @JoinColumn(name = "id_client") 
+    // Relation ManyToOne vers ClientForrage
+    @ManyToOne(fetch = FetchType.EAGER) // charger le client avec la demande
+    @JoinColumn(name = "id_client", nullable = false)
     private ClientForrage client;
 
-    @Column(name = "lieu")
+    @Column(name = "lieu", nullable = false)
     private String lieu;
 
-    @Column(name = "district")
+    @Column(name = "district", nullable = false)
     private String district;
 
+    // Constructeur vide obligatoire pour JPA
     public Demande() {}
 
+    // --- Getters et Setters ---
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
@@ -41,4 +44,15 @@ public class Demande {
 
     public String getDistrict() { return district; }
     public void setDistrict(String district) { this.district = district; }
+
+    // Optionnel : méthode utilitaire pour afficher la demande complète
+    @Transient
+    public String getDescription() {
+        if (client != null) {
+            return String.format("%s - %s (%s) | Client: %s - %s",
+                    lieu, district, date, client.getNom(), client.getContact());
+        } else {
+            return String.format("%s - %s (%s)", lieu, district, date);
+        }
+    }
 }
