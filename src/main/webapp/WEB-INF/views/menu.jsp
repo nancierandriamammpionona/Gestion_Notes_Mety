@@ -20,6 +20,7 @@
             </div>
             <a href="${pageContext.request.contextPath}/clientForrage"><i class="fas fa-building"></i> Liste des clients</a>
             <a href="${pageContext.request.contextPath}/demande"><i class="fas fa-clipboard-list"></i> Liste des demandes</a>
+            <a href="${pageContext.request.contextPath}/devis/list"><i class="fas fa-file-invoice-dollar"></i> liste devis</a>
         </div>
     </nav>
 </div>
